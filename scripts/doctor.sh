@@ -99,6 +99,7 @@ check_command wget
 check_command git
 check_command ssh
 check_command sshd
+check_command pgrep
 check_command python
 check_command php
 check_command nginx

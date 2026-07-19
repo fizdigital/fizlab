@@ -12,6 +12,7 @@ PROJECT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
 
 # shellcheck source=lib/common.sh
 source "$PROJECT_DIR/lib/common.sh"
+source "$PROJECT_DIR/lib/config.sh"
 
 PLATFORM="$(detect_platform)"
 SERVER_HOME="$(get_server_home)"
@@ -97,6 +98,9 @@ create_server_structure() {
     create_directory "$SERVER_HOME/databases" 700
     create_directory "$SERVER_HOME/databases/sqlite" 700
     create_directory "$SERVER_HOME/databases/dumps" 700
+
+    create_directory "$SERVER_HOME/config" 700
+    create_directory "$SERVER_HOME/run" 700
 }
 
 install_packages() {
@@ -145,6 +149,14 @@ EOF
     log_success "Página inicial criada."
 }
 
+configure_core_services() {
+    log_info "Configurando os serviços base..."
+    install_default_config "$PROJECT_DIR"
+    bash "$PROJECT_DIR/services/sqlite/configure.sh"
+    bash "$PROJECT_DIR/services/nginx/configure.sh"
+    log_success "Serviços base configurados."
+}
+
 install_command_links() {
     local bin_directory="$HOME/.local/bin"
 
@@ -154,6 +166,7 @@ install_command_links() {
     ln -sfn "$PROJECT_DIR/scripts/update.sh" "$bin_directory/fizlab-update"
     ln -sfn "$PROJECT_DIR/scripts/doctor.sh" "$bin_directory/fizlab-doctor"
     ln -sfn "$PROJECT_DIR/scripts/startup.sh" "$bin_directory/fizlab-start"
+    ln -sfn "$PROJECT_DIR/scripts/services.sh" "$bin_directory/fizlab-services"
 
 
     if ! grep -Fq 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc" 2>/dev/null; then
@@ -170,6 +183,7 @@ main() {
 
     create_server_structure
     install_packages
+    configure_core_services
     create_default_page
     install_command_links
 

@@ -6,5 +6,6 @@
 secrets/
 backups/
 runtime/
+tmp/
 __pycache__/
 *.pyc

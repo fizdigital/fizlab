@@ -10,6 +10,11 @@ source "$PROJECT_DIR/lib/common.sh"
 PLATFORM="$(detect_platform)"
 SERVER_HOME="$(get_server_home)"
 
+if [ "${1:-}" = "--json" ]; then
+    export SERVER_HOME FIZLAB_VERSION
+    exec python "$PROJECT_DIR/scripts/system_info.py" --doctor
+fi
+
 PASS_COUNT=0
 WARNING_COUNT=0
 FAIL_COUNT=0
@@ -75,6 +80,19 @@ check_process() {
     fi
 }
 
+check_managed_process() {
+    local service_name="$1"
+    local pid_file="$2"
+
+    if pid_file_is_running "$pid_file"; then
+        log_success "Serviço ativo: $service_name"
+        PASS_COUNT=$((PASS_COUNT + 1))
+    else
+        log_error "Serviço inativo: $service_name"
+        FAIL_COUNT=$((FAIL_COUNT + 1))
+    fi
+}
+
 get_local_ip() {
     python - <<'PY'
 import socket
@@ -129,6 +147,24 @@ if [ "$PLATFORM" = "termux" ]; then
     check_termux_boot
     check_process sshd yes
     check_process crond no
+fi
+
+if [ -f "$SERVER_HOME/config/fizlab.env" ]; then
+    check_managed_process fizlab-api "$SERVER_HOME/run/fizlab-api.pid"
+else
+    log_warning "FizLab API ainda não configurada."
+    WARNING_COUNT=$((WARNING_COUNT + 1))
+fi
+
+if [ -f "$SERVER_HOME/config/nginx.conf" ]; then
+    check_managed_process nginx "$SERVER_HOME/run/nginx.pid"
+else
+    log_warning "nginx ainda não configurado."
+    WARNING_COUNT=$((WARNING_COUNT + 1))
+fi
+
+if command_exists python; then
+    printf '\nResumo de serviços: %s\n' "$(SERVER_HOME="$SERVER_HOME" FIZLAB_VERSION="$FIZLAB_VERSION" python "$PROJECT_DIR/scripts/system_info.py" --summary)"
 fi
 
 printf '\n'

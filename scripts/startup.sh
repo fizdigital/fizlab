@@ -48,6 +48,22 @@ if ! mkdir "$LOCK_FILE" 2>/dev/null; then
 fi
 trap 'rmdir "$LOCK_FILE" 2>/dev/null || true' EXIT
 
+managed_process_is_running() {
+    local process_name="$1"
+
+    case "$process_name" in
+        nginx)
+            pid_file_is_running "$SERVER_HOME/run/nginx.pid"
+            ;;
+        fizlab_api.py)
+            pid_file_is_running "$SERVER_HOME/run/fizlab-api.pid"
+            ;;
+        *)
+            process_is_running "$process_name"
+            ;;
+    esac
+}
+
 start_process() {
     local process_name="$1"
     local required="$2"
@@ -55,7 +71,7 @@ start_process() {
     shift
     shift
 
-    if process_is_running "$process_name"; then
+    if managed_process_is_running "$process_name"; then
         log_success "$process_name já está em execução."
         return 0
     fi
@@ -64,7 +80,7 @@ start_process() {
 
     if "$@"; then
         for ((attempt = 1; attempt <= PROCESS_CHECK_ATTEMPTS; attempt++)); do
-            if process_is_running "$process_name"; then
+            if managed_process_is_running "$process_name"; then
                 log_success "$process_name iniciado e confirmado (tentativa $attempt/$PROCESS_CHECK_ATTEMPTS)."
                 return 0
             fi
@@ -111,6 +127,22 @@ if command_exists crond; then
     start_process crond no crond || true
 else
     log_warning "crond ainda não está instalado."
+fi
+
+if [ -f "$SERVER_HOME/config/fizlab.env" ]; then
+    if ! start_process fizlab_api.py yes bash "$PROJECT_DIR/services/api/start.sh"; then
+        STARTUP_FAILED=1
+    fi
+else
+    log_warning "FizLab API ainda não configurada. Execute novamente o instalador."
+fi
+
+if [ -f "$SERVER_HOME/config/nginx.conf" ]; then
+    if ! start_process nginx yes bash "$PROJECT_DIR/services/nginx/start.sh"; then
+        STARTUP_FAILED=1
+    fi
+else
+    log_warning "nginx ainda não configurado. Execute novamente o instalador."
 fi
 
 if [ "$STARTUP_FAILED" -ne 0 ]; then

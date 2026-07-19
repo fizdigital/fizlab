@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0a0a0d">
+    <title>FizLab — Central de Infraestrutura</title>
+    <link rel="icon" type="image/png" sizes="50x50" href="/assets/favicon.png?v=1">
+    <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand" href="#overview" aria-label="FizLab">
+                <span class="brand-symbol" aria-hidden="true"><img src="/assets/simbolo-fiz-digital.png" alt=""></span>
+                <span class="brand-copy"><strong>fiz</strong><small>digital</small></span>
+            </a>
+
+            <div class="product-mark">
+                <span>Infraestrutura</span>
+                <strong>FizLab</strong>
+                <small>Node Console</small>
+            </div>
+
+            <nav aria-label="Navegação principal">
+                <a class="nav-link active" href="#overview">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h6V4H4v9Zm0 7h6v-4H4v4Zm10 0h6v-9h-6v9Zm0-16v4h6V4h-6Z"/></svg>
+                    Visão geral
+                </a>
+                <a class="nav-link" href="#services">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01"/></svg>
+                    Serviços
+                </a>
+                <a class="nav-link" href="#system">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m5 10V5m6 14v-7m5 7V3"/></svg>
+                    Sistema
+                </a>
+                <a class="nav-link" href="#doctor">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z"/><path d="m9 12 2 2 4-5"/></svg>
+                    Diagnóstico
+                </a>
+            </nav>
+
+            <div class="sidebar-node">
+                <span class="pulse-dot"></span>
+                <div><strong id="sidebar-hostname">FizLab Node</strong><small id="sidebar-ip">Conectando…</small></div>
+            </div>
+            <p class="sidebar-footer">Fiz Digital · v<span id="sidebar-version">—</span></p>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <span class="breadcrumb">FizLab / <strong>Dashboard</strong></span>
+                </div>
+                <div class="topbar-actions">
+                    <span id="last-update" class="last-update">Sincronizando…</span>
+                    <div id="overall-status" class="health-badge loading"><span></span>Verificando</div>
+                </div>
+            </header>
+
+            <section id="overview" class="hero">
+                <div class="hero-copy">
+                    <p class="eyebrow">Vertical de soluções de infraestrutura</p>
+                    <h1>Controle inteligente.<br><span>Performance visível.</span></h1>
+                    <p id="node-name" class="hero-description">Conectando ao servidor FizLab…</p>
+                </div>
+                <div class="hero-orbit" aria-hidden="true">
+                    <div class="orbit-ring ring-one"></div>
+                    <div class="orbit-ring ring-two"></div>
+                    <div class="orbit-core"><span>FIZ</span><strong>LAB</strong></div>
+                </div>
+            </section>
+
+            <section class="metrics" aria-label="Métricas do servidor">
+                <article class="metric-card accent-card">
+                    <div class="metric-head"><span class="metric-icon">CPU</span><small>Processamento</small></div>
+                    <div class="metric-main"><strong id="cpu-value">—</strong><span>utilização</span></div>
+                    <div class="progress"><i id="cpu-progress"></i></div>
+                    <p id="cpu-detail">Aguardando dados</p>
+                </article>
+                <article class="metric-card">
+                    <div class="metric-head"><span class="metric-icon">RAM</span><small>Memória</small></div>
+                    <div class="metric-main"><strong id="memory-value">—</strong><span>em uso</span></div>
+                    <div class="progress"><i id="memory-progress"></i></div>
+                    <p id="memory-detail">Aguardando dados</p>
+                </article>
+                <article class="metric-card">
+                    <div class="metric-head"><span class="metric-icon">SSD</span><small>Armazenamento</small></div>
+                    <div class="metric-main"><strong id="storage-value">—</strong><span>ocupado</span></div>
+                    <div class="progress"><i id="storage-progress"></i></div>
+                    <p id="storage-detail">Aguardando dados</p>
+                </article>
+                <article class="metric-card uptime-card">
+                    <div class="metric-head"><span class="metric-icon">UP</span><small>Disponibilidade</small></div>
+                    <div class="metric-main"><strong id="uptime-value">—</strong></div>
+                    <div class="uptime-line"><span></span><i></i><i></i><i></i><i></i><i></i></div>
+                    <p id="uptime-detail">Desde a última inicialização</p>
+                </article>
+            </section>
+
+            <section id="services" class="panel services-panel">
+                <div class="section-heading">
+                    <div><p class="eyebrow">Monitoramento em tempo real</p><h2>Serviços do nó</h2></div>
+                    <span class="section-tag">Galaxy A15 · Termux</span>
+                </div>
+                <div id="services-list" class="services-list"></div>
+            </section>
+
+            <div class="detail-grid">
+                <section id="system" class="panel">
+                    <div class="section-heading compact"><div><p class="eyebrow">Ambiente</p><h2>Informações do sistema</h2></div></div>
+                    <dl id="system-details" class="system-details"></dl>
+                </section>
+                <section id="doctor" class="panel doctor-panel">
+                    <div class="section-heading compact"><div><p class="eyebrow">Integridade</p><h2>FizLab Doctor</h2></div></div>
+                    <div id="doctor-summary" class="doctor-summary"><span class="doctor-icon">✓</span><div>Aguardando diagnóstico…</div></div>
+                    <div class="doctor-footer"><span>Verificação automática</span><strong id="doctor-status">—</strong></div>
+                </section>
+            </div>
+
+            <footer><span>FizLab Infrastructure Automation Toolkit</span><span>Fiz Digital © 2026</span></footer>
+            <div id="connection-error" class="connection-error" hidden></div>
+        </main>
+    </div>
+    <script src="/assets/app.js" defer></script>
+</body>
+</html>

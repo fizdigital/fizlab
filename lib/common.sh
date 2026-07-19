@@ -7,7 +7,7 @@
 set -o pipefail
 
 FIZLAB_NAME="FizLab"
-FIZLAB_VERSION="0.1.0"
+FIZLAB_VERSION="0.3.0-alpha.1"
 
 log_info() {
     printf '\033[1;34m[INFO]\033[0m %s\n' "$1"
@@ -34,6 +34,16 @@ process_is_running() {
 
     pgrep -x "$process_name" >/dev/null 2>&1 ||
         pgrep -f "(^|/)${process_name}([[:space:]]|$)" >/dev/null 2>&1
+}
+
+pid_file_is_running() {
+    local pid_file="$1"
+    local pid
+
+    [ -f "$pid_file" ] || return 1
+    pid="$(cat "$pid_file" 2>/dev/null)"
+    [[ "$pid" =~ ^[0-9]+$ ]] || return 1
+    kill -0 "$pid" 2>/dev/null
 }
 
 create_directory() {

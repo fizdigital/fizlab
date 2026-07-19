@@ -179,6 +179,39 @@ Ele nunca executará comandos diretamente.
 
 Toda comunicação ocorrerá através dos módulos do FizLab.
 
+## Fluxo implementado
+
+```text
+Navegador :8080
+      |
+    Nginx
+      |
+      +-- /             -> dashboard estático
+      +-- /api/v1/*     -> API Python 127.0.0.1:8765
+                               |
+                         system_info.py
+                               |
+                  sistema, serviços e Doctor
+```
+
+A API escuta apenas no endereço de loopback. O Nginx é o único serviço web
+exposto à rede local. O dashboard é somente leitura e não executa comandos do
+sistema.
+
+## Estado e configuração
+
+```text
+$SERVER_HOME/config/fizlab.env
+$SERVER_HOME/config/nginx.conf
+$SERVER_HOME/run/
+$SERVER_HOME/databases/sqlite/fizlab.db
+$SERVER_HOME/logs/nginx/
+$SERVER_HOME/logs/python/
+```
+
+Os arquivos em `$SERVER_HOME/config` são preservados em reinstalações. Os
+módulos de serviço ficam em `services/` e devem ser idempotentes.
+
 ---
 
 # Objetivo

@@ -16,10 +16,15 @@ mkdir -p "$MOCK_BIN"
 cat > "$MOCK_BIN/pgrep" <<'EOF'
 #!/usr/bin/env bash
 
-process_name="${@: -1}"
+match_mode="$1"
+process_pattern="${@: -1}"
 
-if [ "$process_name" = "crond" ]; then
+if [[ "$process_pattern" == *crond* ]]; then
     exit 0
+fi
+
+if [ "$match_mode" = "-x" ]; then
+    exit 1
 fi
 
 count_file="$TEST_STATE/pgrep-count"

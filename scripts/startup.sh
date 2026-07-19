@@ -55,7 +55,7 @@ start_process() {
     shift
     shift
 
-    if pgrep -x "$process_name" >/dev/null 2>&1; then
+    if process_is_running "$process_name"; then
         log_success "$process_name já está em execução."
         return 0
     fi
@@ -64,7 +64,7 @@ start_process() {
 
     if "$@"; then
         for ((attempt = 1; attempt <= PROCESS_CHECK_ATTEMPTS; attempt++)); do
-            if pgrep -x "$process_name" >/dev/null 2>&1; then
+            if process_is_running "$process_name"; then
                 log_success "$process_name iniciado e confirmado (tentativa $attempt/$PROCESS_CHECK_ATTEMPTS)."
                 return 0
             fi

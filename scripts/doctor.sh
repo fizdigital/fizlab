@@ -54,7 +54,7 @@ check_process() {
     local process_name="$1"
     local required="${2:-no}"
 
-    if pgrep -x "$process_name" >/dev/null 2>&1; then
+    if process_is_running "$process_name"; then
         log_success "Serviço ativo: $process_name"
         PASS_COUNT=$((PASS_COUNT + 1))
     elif [ "$required" = "yes" ]; then

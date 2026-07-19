@@ -29,6 +29,13 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
+process_is_running() {
+    local process_name="$1"
+
+    pgrep -x "$process_name" >/dev/null 2>&1 ||
+        pgrep -f "(^|/)${process_name}([[:space:]]|$)" >/dev/null 2>&1
+}
+
 create_directory() {
     local directory="$1"
     local permissions="${2:-755}"

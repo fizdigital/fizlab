@@ -1,0 +1,31 @@
+pid __SERVER_HOME__/run/nginx.pid;
+error_log __SERVER_HOME__/logs/nginx/error.log;
+
+events {
+    worker_connections 256;
+}
+
+http {
+    access_log __SERVER_HOME__/logs/nginx/access.log;
+    default_type application/octet-stream;
+    sendfile on;
+    keepalive_timeout 30;
+
+    server {
+        listen __HTTP_HOST__:__HTTP_PORT__;
+        server_name _;
+        root __PROJECT_DIR__/dashboard;
+        index index.html;
+
+        location /api/ {
+            proxy_pass http://__API_HOST__:__API_PORT__;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+    }
+}

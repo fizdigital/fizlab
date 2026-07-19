@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b1220">
+    <title>FizLab Dashboard</title>
+    <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <div>
+                <p class="eyebrow">Fiz Digital</p>
+                <h1>FizLab <span>Dashboard</span></h1>
+                <p id="node-name" class="subtitle">Conectando ao servidor…</p>
+            </div>
+            <div id="overall-status" class="status status-loading">Verificando</div>
+        </header>
+
+        <section class="metrics" aria-label="Métricas do sistema">
+            <article class="metric">
+                <p>CPU</p>
+                <strong id="cpu-value">—</strong>
+                <small id="cpu-detail">Carga do sistema</small>
+            </article>
+            <article class="metric">
+                <p>Memória</p>
+                <strong id="memory-value">—</strong>
+                <small id="memory-detail">—</small>
+            </article>
+            <article class="metric">
+                <p>Armazenamento</p>
+                <strong id="storage-value">—</strong>
+                <small id="storage-detail">—</small>
+            </article>
+            <article class="metric">
+                <p>Uptime</p>
+                <strong id="uptime-value">—</strong>
+                <small id="uptime-detail">Desde a inicialização</small>
+            </article>
+        </section>
+
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <p class="eyebrow">Serviços base</p>
+                    <h2>Estado operacional</h2>
+                </div>
+                <p id="last-update" class="muted">—</p>
+            </div>
+            <div id="services" class="services"></div>
+        </section>
+
+        <section class="details-grid">
+            <article class="panel">
+                <p class="eyebrow">Sistema</p>
+                <h2>Informações do nó</h2>
+                <dl id="system-details"></dl>
+            </article>
+            <article class="panel">
+                <p class="eyebrow">Diagnóstico</p>
+                <h2>FizLab Doctor</h2>
+                <div id="doctor-summary" class="doctor-summary">Aguardando diagnóstico…</div>
+            </article>
+        </section>
+
+        <p id="connection-error" class="connection-error" hidden></p>
+    </main>
+    <script src="/assets/app.js" defer></script>
+</body>
+</html>

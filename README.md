@@ -61,11 +61,12 @@ Implementado:
 
 Em desenvolvimento:
 
-- Dashboard
+- Dashboard Web inicial
+- API de status
 - Monitoramento
 - Backups
-- Nginx
-- Python
+- Nginx multiplataforma
+- Python e SQLite
 - MariaDB
 - Tailscale
 
@@ -87,9 +88,24 @@ cd fizlab
 
 Veja:
 
+[ROADMAP.md](ROADMAP.md)
+
+## Dashboard e API
+
+Depois da instalação, inicie os serviços:
+
+```bash
+fizlab-start
 ```
-docs/ROADMAP.md
+
+O dashboard fica disponível por padrão em:
+
+```text
+http://IP_DO_SERVIDOR:8080
 ```
+
+A API oferece os endpoints `/api/v1/health`, `/api/v1/system`,
+`/api/v1/services`, `/api/v1/doctor` e `/api/v1/status`.
 
 ---
 

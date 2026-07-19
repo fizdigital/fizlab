@@ -48,18 +48,22 @@ Status: 🚧 Em desenvolvimento
 
 Objetivo: instalar os principais serviços através do FizLab.
 
-## Planejado
+## Implementado nesta etapa
 
-- Git
-- Python
-- PHP
-- Nginx
-- SQLite
-- MariaDB
+- Git ✅
+- Python ✅
+- PHP CLI ✅
+- Nginx ✅
+- SQLite ✅
+- Cron ✅
+
+## Pendente
+
+- MariaDB opcional
 - Node.js
-- Cron
+- Homologação em Debian/Ubuntu
 
-Status: 📋 Planejado
+Status: 🚧 Em desenvolvimento
 
 ---
 
@@ -67,19 +71,23 @@ Status: 📋 Planejado
 
 Objetivo: administrar o servidor via navegador.
 
-## Planejado
+## Implementado inicialmente
 
-- Dashboard Web
-- Status dos serviços
-- Uso de CPU
-- Uso de memória
-- Uso de armazenamento
-- Logs
+- Dashboard Web ✅
+- API somente leitura ✅
+- Status dos serviços ✅
+- Uso de CPU ✅
+- Uso de memória ✅
+- Uso de armazenamento ✅
+- Informações da rede ✅
+
+## Pendente
+
+- Visualização de logs
 - Atualizações
 - Backups
-- Informações da rede
 
-Status: 📋 Planejado
+Status: 🚧 Em desenvolvimento
 
 ---
 

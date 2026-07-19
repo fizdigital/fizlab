@@ -45,7 +45,7 @@ BOOT_LOG="\$LOG_DIRECTORY/termux-boot-\$(date +%Y-%m-%d_%H-%M-%S).log"
     echo "PATH: \$PATH"
     echo "============================================"
 
-    exec "$STARTUP_SCRIPT" --boot
+    exec "\$PREFIX/bin/bash" "$STARTUP_SCRIPT" --boot
 } >> "\$BOOT_LOG" 2>&1
 EOF
 
@@ -53,4 +53,11 @@ chmod 700 "$BOOT_SCRIPT"
 
 log_success "Script do Termux:Boot instalado:"
 log_info "$BOOT_SCRIPT"
+
+for boot_entry in "$BOOT_DIRECTORY"/*; do
+    if [ -f "$boot_entry" ] && [ -x "$boot_entry" ] && [ "$boot_entry" != "$BOOT_SCRIPT" ]; then
+        log_warning "Entrada adicional executável no Termux:Boot: $boot_entry"
+    fi
+done
+
 log_warning "No Android, abra o Termux:Boot pelo menos uma vez e remova restrições de bateria do Termux e do Termux:Boot."

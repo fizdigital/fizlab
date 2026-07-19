@@ -27,6 +27,11 @@ chmod 600 "$TARGET"
 
 if command_exists nginx; then
     nginx -t -c "$TARGET" -p "$SERVER_HOME/"
+
+    if pid_file_is_running "$SERVER_HOME/run/nginx.pid"; then
+        nginx -c "$TARGET" -p "$SERVER_HOME/" -s reload
+        log_success "Configuração recarregada no nginx ativo."
+    fi
 fi
 
 log_success "Nginx configurado: $TARGET"

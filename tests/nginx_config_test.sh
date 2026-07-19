@@ -14,13 +14,18 @@ trap cleanup EXIT
 mkdir -p "$MOCK_BIN"
 cat > "$MOCK_BIN/nginx" <<'EOF'
 #!/usr/bin/env bash
+printf '%s\n' "$*" >> "$NGINX_CALLS"
 exit 0
 EOF
 chmod +x "$MOCK_BIN/nginx"
 
+mkdir -p "$TEST_DIRECTORY/server/run"
+printf '%s\n' "$$" > "$TEST_DIRECTORY/server/run/nginx.pid"
+
 env \
     PATH="$MOCK_BIN:$PATH" \
     SERVER_HOME="$TEST_DIRECTORY/server" \
+    NGINX_CALLS="$TEST_DIRECTORY/nginx-calls.log" \
     FIZLAB_HTTP_PORT=9080 \
     FIZLAB_API_PORT=9765 \
     bash "$PROJECT_DIR/services/nginx/configure.sh"
@@ -31,5 +36,6 @@ grep -Fq "proxy_pass http://127.0.0.1:9765;" "$CONFIG"
 grep -Fq "root $PROJECT_DIR/dashboard;" "$CONFIG"
 grep -Fq "text/css css;" "$CONFIG"
 grep -Fq "application/javascript js;" "$CONFIG"
+grep -Fq -- "-s reload" "$TEST_DIRECTORY/nginx-calls.log"
 
 printf 'nginx_config_test: OK\n'

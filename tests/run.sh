@@ -8,6 +8,7 @@ cd "$PROJECT_DIR"
 bash tests/startup_test.sh
 bash tests/install_boot_test.sh
 bash tests/nginx_config_test.sh
+bash tests/dashboard_assets_test.sh
 bash tests/api_service_test.sh
 bash tests/install_test.sh
 python tests/system_info_test.py

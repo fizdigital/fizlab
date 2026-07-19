@@ -35,6 +35,33 @@ check_directory() {
     else
         log_error "Diretório ausente: $directory"
         FAIL_COUNT=$((FAIL_COUNT + 1))
+
+    if [ "$PLATFORM" = "termux" ]; then
+    if [ -x "$HOME/.termux/boot/00-fizlab-start" ]; then
+        log_success "Termux:Boot configurado."
+        PASS_COUNT=$((PASS_COUNT + 1))
+    else
+        log_warning "Termux:Boot ainda não está configurado."
+        WARNING_COUNT=$((WARNING_COUNT + 1))
+    fi
+
+    if pgrep -x sshd >/dev/null 2>&1; then
+        log_success "Serviço ativo: sshd"
+        PASS_COUNT=$((PASS_COUNT + 1))
+    else
+        log_error "Serviço inativo: sshd"
+        FAIL_COUNT=$((FAIL_COUNT + 1))
+    fi
+
+    if pgrep -x crond >/dev/null 2>&1; then
+        log_success "Serviço ativo: crond"
+        PASS_COUNT=$((PASS_COUNT + 1))
+    else
+        log_warning "Serviço inativo: crond"
+        WARNING_COUNT=$((WARNING_COUNT + 1))
+    fi
+    fi
+
     fi
 }
 

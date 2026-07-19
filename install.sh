@@ -153,6 +153,8 @@ install_command_links() {
     ln -sfn "$PROJECT_DIR/install.sh" "$bin_directory/fizlab-install"
     ln -sfn "$PROJECT_DIR/scripts/update.sh" "$bin_directory/fizlab-update"
     ln -sfn "$PROJECT_DIR/scripts/doctor.sh" "$bin_directory/fizlab-doctor"
+    ln -sfn "$PROJECT_DIR/scripts/startup.sh" "$bin_directory/fizlab-start"
+
 
     if ! grep -Fq 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc" 2>/dev/null; then
         printf '\nexport PATH="$HOME/.local/bin:$PATH"\n' >> "$HOME/.bashrc"

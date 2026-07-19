@@ -1,0 +1,10 @@
+*.log
+*.tmp
+*.swp
+.env
+.env.*
+secrets/
+backups/
+runtime/
+__pycache__/
+*.pyc

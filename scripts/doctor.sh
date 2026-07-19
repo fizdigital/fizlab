@@ -35,33 +35,43 @@ check_directory() {
     else
         log_error "Diretório ausente: $directory"
         FAIL_COUNT=$((FAIL_COUNT + 1))
-
-    if [ "$PLATFORM" = "termux" ]; then
-    if [ -x "$HOME/.termux/boot/00-fizlab-start" ]; then
-        log_success "Termux:Boot configurado."
-        PASS_COUNT=$((PASS_COUNT + 1))
-    else
-        log_warning "Termux:Boot ainda não está configurado."
-        WARNING_COUNT=$((WARNING_COUNT + 1))
     fi
+}
 
-    if pgrep -x sshd >/dev/null 2>&1; then
-        log_success "Serviço ativo: sshd"
+check_termux_boot() {
+    local boot_directory="$HOME/.termux/boot"
+    local boot_script="$boot_directory/00-fizlab-start"
+    local boot_entry
+
+    if [ -x "$boot_script" ]; then
+        log_success "Termux:Boot configurado: $boot_script"
         PASS_COUNT=$((PASS_COUNT + 1))
     else
-        log_error "Serviço inativo: sshd"
+        log_error "Termux:Boot não configurado ou sem permissão de execução: $boot_script"
         FAIL_COUNT=$((FAIL_COUNT + 1))
     fi
 
-    if pgrep -x crond >/dev/null 2>&1; then
-        log_success "Serviço ativo: crond"
-        PASS_COUNT=$((PASS_COUNT + 1))
-    else
-        log_warning "Serviço inativo: crond"
-        WARNING_COUNT=$((WARNING_COUNT + 1))
-    fi
-    fi
+    for boot_entry in "$boot_directory"/*; do
+        if [ -f "$boot_entry" ] && [ -x "$boot_entry" ] && [ "$boot_entry" != "$boot_script" ]; then
+            log_warning "Entrada adicional executável no Termux:Boot: $boot_entry"
+            WARNING_COUNT=$((WARNING_COUNT + 1))
+        fi
+    done
+}
 
+check_process() {
+    local process_name="$1"
+    local required="${2:-no}"
+
+    if process_is_running "$process_name"; then
+        log_success "Serviço ativo: $process_name"
+        PASS_COUNT=$((PASS_COUNT + 1))
+    elif [ "$required" = "yes" ]; then
+        log_error "Serviço inativo: $process_name"
+        FAIL_COUNT=$((FAIL_COUNT + 1))
+    else
+        log_warning "Serviço inativo: $process_name"
+        WARNING_COUNT=$((WARNING_COUNT + 1))
     fi
 }
 
@@ -70,7 +80,6 @@ get_local_ip() {
 import socket
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
 try:
     sock.connect(("8.8.8.8", 80))
     print(sock.getsockname()[0])
@@ -99,6 +108,7 @@ check_command wget
 check_command git
 check_command ssh
 check_command sshd
+check_command pgrep
 check_command python
 check_command php
 check_command nginx
@@ -114,6 +124,12 @@ check_directory "$SERVER_HOME/scripts"
 check_directory "$SERVER_HOME/logs"
 check_directory "$SERVER_HOME/files"
 check_directory "$SERVER_HOME/databases"
+
+if [ "$PLATFORM" = "termux" ]; then
+    check_termux_boot
+    check_process sshd yes
+    check_process crond no
+fi
 
 printf '\n'
 printf '============================================\n'

@@ -39,7 +39,9 @@ check_directory() {
 }
 
 check_termux_boot() {
-    local boot_script="$HOME/.termux/boot/00-fizlab-start"
+    local boot_directory="$HOME/.termux/boot"
+    local boot_script="$boot_directory/00-fizlab-start"
+    local boot_entry
 
     if [ -x "$boot_script" ]; then
         log_success "Termux:Boot configurado: $boot_script"
@@ -48,6 +50,13 @@ check_termux_boot() {
         log_error "Termux:Boot não configurado ou sem permissão de execução: $boot_script"
         FAIL_COUNT=$((FAIL_COUNT + 1))
     fi
+
+    for boot_entry in "$boot_directory"/*; do
+        if [ -f "$boot_entry" ] && [ -x "$boot_entry" ] && [ "$boot_entry" != "$boot_script" ]; then
+            log_warning "Entrada adicional executável no Termux:Boot: $boot_entry"
+            WARNING_COUNT=$((WARNING_COUNT + 1))
+        fi
+    done
 }
 
 check_process() {

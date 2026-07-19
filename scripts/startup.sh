@@ -9,11 +9,13 @@ source "$PROJECT_DIR/lib/common.sh"
 
 SERVER_HOME="$(get_server_home)"
 LOG_DIRECTORY="$SERVER_HOME/logs/system"
+LOCK_DIRECTORY="$SERVER_HOME/run"
+LOCK_FILE="$LOCK_DIRECTORY/startup.lock"
+BOOT_MODE="${1:-}"
 
-mkdir -p "$LOG_DIRECTORY"
+mkdir -p "$LOG_DIRECTORY" "$LOCK_DIRECTORY"
 
 LOG_FILE="$LOG_DIRECTORY/startup-$(date +%Y-%m-%d_%H-%M-%S).log"
-
 exec >> "$LOG_FILE" 2>&1
 
 printf '\n'
@@ -24,7 +26,14 @@ printf 'Data:        %s\n' "$(date)"
 printf 'Plataforma:  %s\n' "$(detect_platform)"
 printf 'Usuário:     %s\n' "$(whoami)"
 printf 'Projeto:     %s\n' "$PROJECT_DIR"
+printf 'Modo:        %s\n' "${BOOT_MODE:---manual}"
 printf '============================================\n\n'
+
+if ! mkdir "$LOCK_FILE" 2>/dev/null; then
+    log_warning "Outra rotina de inicialização já está em andamento."
+    exit 0
+fi
+trap 'rmdir "$LOCK_FILE" 2>/dev/null || true' EXIT
 
 start_process() {
     local process_name="$1"
@@ -51,13 +60,15 @@ start_process() {
     fi
 }
 
-log_info "Aguardando a inicialização do Android..."
-sleep 15
+if [ "$BOOT_MODE" = "--boot" ]; then
+    log_info "Aguardando o Android concluir a inicialização..."
+    sleep "${FIZLAB_BOOT_DELAY:-25}"
+fi
 
 if command_exists termux-wake-lock; then
     termux-wake-lock || log_warning "Não foi possível ativar o wake lock."
 else
-    log_warning "Comando termux-wake-lock não disponível."
+    log_warning "Comando termux-wake-lock não disponível. Instale o Termux:API se quiser manter o wake lock."
 fi
 
 if command_exists sshd; then

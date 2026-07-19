@@ -29,5 +29,7 @@ CONFIG="$TEST_DIRECTORY/server/config/nginx.conf"
 grep -Fq "listen 0.0.0.0:9080;" "$CONFIG"
 grep -Fq "proxy_pass http://127.0.0.1:9765;" "$CONFIG"
 grep -Fq "root $PROJECT_DIR/dashboard;" "$CONFIG"
+grep -Fq "text/css css;" "$CONFIG"
+grep -Fq "application/javascript js;" "$CONFIG"
 
 printf 'nginx_config_test: OK\n'

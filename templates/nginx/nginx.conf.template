@@ -8,6 +8,14 @@ events {
 http {
     access_log __SERVER_HOME__/logs/nginx/access.log;
     default_type application/octet-stream;
+    types {
+        text/html html;
+        text/css css;
+        application/javascript js;
+        application/json json;
+        image/svg+xml svg;
+        image/png png;
+    }
     sendfile on;
     keepalive_timeout 30;
 
@@ -26,6 +34,7 @@ http {
 
         location / {
             try_files $uri $uri/ /index.html;
+            add_header Cache-Control "no-store";
         }
     }
 }

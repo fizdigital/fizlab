@@ -33,6 +33,8 @@ test -f "$SERVER_HOME/config/fizlab.env"
 test -f "$SERVER_HOME/config/nginx.conf"
 test -f "$SERVER_HOME/databases/sqlite/fizlab.db"
 test -L "$TEST_HOME/.local/bin/fizlab-services"
+HOME="$TEST_HOME" SERVER_HOME="$SERVER_HOME" \
+    "$TEST_HOME/.local/bin/fizlab-services" status >/dev/null
 
 python - "$SERVER_HOME/databases/sqlite/fizlab.db" <<'PY'
 import sqlite3

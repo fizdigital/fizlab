@@ -35,33 +35,34 @@ check_directory() {
     else
         log_error "Diretório ausente: $directory"
         FAIL_COUNT=$((FAIL_COUNT + 1))
-
-    if [ "$PLATFORM" = "termux" ]; then
-    if [ -x "$HOME/.termux/boot/00-fizlab-start" ]; then
-        log_success "Termux:Boot configurado."
-        PASS_COUNT=$((PASS_COUNT + 1))
-    else
-        log_warning "Termux:Boot ainda não está configurado."
-        WARNING_COUNT=$((WARNING_COUNT + 1))
     fi
+}
 
-    if pgrep -x sshd >/dev/null 2>&1; then
-        log_success "Serviço ativo: sshd"
+check_termux_boot() {
+    local boot_script="$HOME/.termux/boot/00-fizlab-start"
+
+    if [ -x "$boot_script" ]; then
+        log_success "Termux:Boot configurado: $boot_script"
         PASS_COUNT=$((PASS_COUNT + 1))
     else
-        log_error "Serviço inativo: sshd"
+        log_error "Termux:Boot não configurado ou sem permissão de execução: $boot_script"
         FAIL_COUNT=$((FAIL_COUNT + 1))
     fi
+}
 
-    if pgrep -x crond >/dev/null 2>&1; then
-        log_success "Serviço ativo: crond"
+check_process() {
+    local process_name="$1"
+    local required="${2:-no}"
+
+    if pgrep -x "$process_name" >/dev/null 2>&1; then
+        log_success "Serviço ativo: $process_name"
         PASS_COUNT=$((PASS_COUNT + 1))
+    elif [ "$required" = "yes" ]; then
+        log_error "Serviço inativo: $process_name"
+        FAIL_COUNT=$((FAIL_COUNT + 1))
     else
-        log_warning "Serviço inativo: crond"
+        log_warning "Serviço inativo: $process_name"
         WARNING_COUNT=$((WARNING_COUNT + 1))
-    fi
-    fi
-
     fi
 }
 
@@ -70,7 +71,6 @@ get_local_ip() {
 import socket
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
 try:
     sock.connect(("8.8.8.8", 80))
     print(sock.getsockname()[0])
@@ -114,6 +114,12 @@ check_directory "$SERVER_HOME/scripts"
 check_directory "$SERVER_HOME/logs"
 check_directory "$SERVER_HOME/files"
 check_directory "$SERVER_HOME/databases"
+
+if [ "$PLATFORM" = "termux" ]; then
+    check_termux_boot
+    check_process sshd yes
+    check_process crond no
+fi
 
 printf '\n'
 printf '============================================\n'

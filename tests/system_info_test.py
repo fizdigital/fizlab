@@ -17,7 +17,7 @@ assert spec and spec.loader
 system_info = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(system_info)
 
-with mock.patch.object(system_info.os, "getloadavg", None):
+with mock.patch.object(system_info.os, "getloadavg", None, create=True):
     android_load_average = system_info.load_average()
     assert isinstance(android_load_average, list)
     assert len(android_load_average) in (0, 3)

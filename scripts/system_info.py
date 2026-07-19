@@ -99,6 +99,21 @@ def storage(path: Path) -> dict[str, int | float]:
     }
 
 
+def load_average() -> list[float]:
+    getter = getattr(os, "getloadavg", None)
+    if callable(getter):
+        try:
+            return [round(value, 2) for value in getter()]
+        except OSError:
+            pass
+
+    try:
+        values = Path("/proc/loadavg").read_text(encoding="utf-8").split()[:3]
+        return [round(float(value), 2) for value in values]
+    except (OSError, ValueError):
+        return []
+
+
 def process_running(pattern: str) -> bool:
     if not shutil.which("pgrep"):
         return False
@@ -159,12 +174,9 @@ def collect() -> dict[str, Any]:
     services = service_status()
     required = (services["ssh"],)
     overall = "healthy" if all(item["running"] for item in required) else "degraded"
-    try:
-        load_average = [round(value, 2) for value in os.getloadavg()]
-    except OSError:
-        load_average = []
+    current_load_average = load_average()
     cpu_count = os.cpu_count() or 0
-    load_percent = round(min(load_average[0] / cpu_count * 100, 100), 1) if load_average and cpu_count else 0.0
+    load_percent = round(min(current_load_average[0] / cpu_count * 100, 100), 1) if current_load_average and cpu_count else 0.0
 
     return {
         "status": overall,
@@ -175,7 +187,7 @@ def collect() -> dict[str, Any]:
             "platform": detect_platform(),
             "architecture": platform.machine(),
             "cpu_count": cpu_count,
-            "load_average": load_average,
+            "load_average": current_load_average,
             "load_percent": load_percent,
             "memory": memory(),
             "storage": storage(home),

@@ -152,8 +152,8 @@ EOF
 configure_core_services() {
     log_info "Configurando os serviços base..."
     install_default_config "$PROJECT_DIR"
-    "$PROJECT_DIR/services/sqlite/configure.sh"
-    "$PROJECT_DIR/services/nginx/configure.sh"
+    bash "$PROJECT_DIR/services/sqlite/configure.sh"
+    bash "$PROJECT_DIR/services/nginx/configure.sh"
     log_success "Serviços base configurados."
 }
 

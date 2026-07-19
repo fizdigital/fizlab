@@ -13,6 +13,11 @@ trap cleanup EXIT
 
 mkdir -p "$MOCK_BIN"
 
+grep -Fq 'start_process fizlab_api.py yes bash "$PROJECT_DIR/services/api/start.sh"' \
+    "$PROJECT_DIR/scripts/startup.sh"
+grep -Fq 'start_process nginx yes bash "$PROJECT_DIR/services/nginx/start.sh"' \
+    "$PROJECT_DIR/scripts/startup.sh"
+
 cat > "$MOCK_BIN/pgrep" <<'EOF'
 #!/usr/bin/env bash
 

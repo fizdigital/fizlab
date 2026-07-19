@@ -130,7 +130,7 @@ else
 fi
 
 if [ -f "$SERVER_HOME/config/fizlab.env" ]; then
-    if ! start_process fizlab_api.py yes "$PROJECT_DIR/services/api/start.sh"; then
+    if ! start_process fizlab_api.py yes bash "$PROJECT_DIR/services/api/start.sh"; then
         STARTUP_FAILED=1
     fi
 else
@@ -138,7 +138,7 @@ else
 fi
 
 if [ -f "$SERVER_HOME/config/nginx.conf" ]; then
-    if ! start_process nginx yes "$PROJECT_DIR/services/nginx/start.sh"; then
+    if ! start_process nginx yes bash "$PROJECT_DIR/services/nginx/start.sh"; then
         STARTUP_FAILED=1
     fi
 else

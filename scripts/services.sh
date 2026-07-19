@@ -10,12 +10,12 @@ ACTION="${1:-status}"
 
 case "$ACTION" in
     start)
-        "$PROJECT_DIR/services/api/start.sh"
-        "$PROJECT_DIR/services/nginx/start.sh"
+        bash "$PROJECT_DIR/services/api/start.sh"
+        bash "$PROJECT_DIR/services/nginx/start.sh"
         ;;
     stop)
-        "$PROJECT_DIR/services/nginx/stop.sh"
-        "$PROJECT_DIR/services/api/stop.sh"
+        bash "$PROJECT_DIR/services/nginx/stop.sh"
+        bash "$PROJECT_DIR/services/api/stop.sh"
         ;;
     restart)
         "$0" stop

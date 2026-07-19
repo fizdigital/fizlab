@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+import traceback
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -31,6 +32,20 @@ class FizLabHandler(BaseHTTPRequestHandler):
         self.wfile.write(content)
 
     def do_GET(self) -> None:  # noqa: N802
+        try:
+            self.handle_get()
+        except Exception as error:  # API boundary: keep the connection diagnosable
+            traceback.print_exc()
+            self.send_json(
+                {
+                    "status": "error",
+                    "error": type(error).__name__,
+                    "message": str(error),
+                },
+                HTTPStatus.INTERNAL_SERVER_ERROR,
+            )
+
+    def handle_get(self) -> None:
         payload = system_info.collect()
         routes = {
             "/api/v1/health": {

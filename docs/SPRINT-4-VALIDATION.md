@@ -2,6 +2,23 @@
 
 Este roteiro valida monitoramento, logs e manutenção no ambiente real do FizLab.
 
+## Resultado da homologação — Galaxy A15
+
+Homologado em 20/07/2026 no Samsung Galaxy A15 com Termux.
+
+- suíte `./tests/run.sh` aprovada, incluindo os testes de operações e watchdog;
+- instalação e reinstalação da versão `0.4.0-alpha.1` aprovadas;
+- Doctor aprovado com 29 verificações, 0 avisos e 0 falhas;
+- cron configurado com watchdog a cada 5 minutos e manutenção diária;
+- recuperação automática da API e do Nginx aprovada na primeira tentativa;
+- eventos de falha e recuperação registrados no SQLite;
+- catálogo e leitura limitada de logs aprovados pela API e dashboard;
+- manutenção em modo de simulação e execução real aprovadas, sem remoções indevidas;
+- reinicialização real do Android aprovada: SSH, cron, API e Nginx iniciaram sem abrir o Termux;
+- dashboard acessível em `http://192.168.1.20:8080` antes da abertura manual do Termux.
+
+Status: **aprovado**.
+
 ## 1. Atualização e regressão
 
 ```bash

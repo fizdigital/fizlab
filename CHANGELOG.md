@@ -18,6 +18,12 @@
 - Limites de linhas e bytes impedem respostas excessivas.
 - Configurações, bancos, backups e arquivos do usuário não entram na limpeza.
 
+### Homologação
+
+- Galaxy A15 / Termux: aprovada em 20/07/2026.
+- Doctor: 29 aprovações, 0 avisos e 0 falhas.
+- Recuperação automática de API e Nginx, cron, manutenção, logs, dashboard e boot real aprovados.
+
 ## 0.3.0-alpha.1 — Sprint 3
 
 ### Adicionado

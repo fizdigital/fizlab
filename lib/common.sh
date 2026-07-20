@@ -7,7 +7,7 @@
 set -o pipefail
 
 FIZLAB_NAME="FizLab"
-FIZLAB_VERSION="0.3.0-alpha.1"
+FIZLAB_VERSION="0.4.0-alpha.1"
 
 log_info() {
     printf '\033[1;34m[INFO]\033[0m %s\n' "$1"

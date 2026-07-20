@@ -14,6 +14,7 @@ const formatDuration = (seconds) => {
     const minutes = Math.floor((seconds % 3600) / 60);
     return [days && `${days}d`, hours && `${hours}h`, `${minutes}min`].filter(Boolean).join(" ");
 };
+const formatDate = (value) => value ? new Date(value).toLocaleString("pt-BR") : "Ainda não executado";
 const setProgress = (id, value) => { byId(id).style.width = `${Math.max(0, Math.min(value, 100))}%`; };
 const setHealth = (status) => {
     const element = byId("overall-status");
@@ -62,6 +63,9 @@ const render = (data) => {
     byId("storage-detail").textContent = `${formatBytes(system.storage.free_bytes)} livres de ${formatBytes(system.storage.total_bytes)}`;
     setProgress("storage-progress", system.storage.percent);
     byId("uptime-value").textContent = formatDuration(system.uptime_seconds);
+    byId("last-watchdog").textContent = formatDate(data.monitoring?.last_watchdog);
+    byId("last-maintenance").textContent = formatDate(data.monitoring?.last_maintenance);
+    byId("logs-total").textContent = `${formatBytes(data.monitoring?.logs_size_bytes || 0)} em logs ativos`;
 
     const services = byId("services-list");
     services.replaceChildren(...Object.entries(data.services).map(([name, service]) => createServiceCard(name, service)));
@@ -88,6 +92,45 @@ const render = (data) => {
     byId("last-update").textContent = `Atualizado às ${new Date(data.timestamp).toLocaleTimeString("pt-BR")}`;
 };
 
+const loadLog = async () => {
+    const id = byId("log-select").value;
+    if (!id) return;
+    const output = byId("log-output");
+    output.textContent = "Carregando…";
+    try {
+        const response = await fetch(`/api/v1/logs/${encodeURIComponent(id)}?lines=200`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        output.textContent = data.lines.length ? data.lines.join("\n") : "O arquivo está vazio.";
+        byId("log-meta").textContent = `${formatBytes(data.size_bytes)} · ${data.line_count} linhas exibidas${data.truncated ? " · conteúdo limitado" : ""}`;
+        output.scrollTop = output.scrollHeight;
+    } catch (error) {
+        output.textContent = `Não foi possível carregar o log: ${error.message}`;
+    }
+};
+
+const loadLogCatalog = async () => {
+    const response = await fetch("/api/v1/logs", { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data = await response.json();
+    const select = byId("log-select");
+    select.replaceChildren(...data.logs.map((log) => {
+        const option = document.createElement("option");
+        option.value = log.id;
+        option.textContent = `${log.name}${log.available ? "" : " (sem dados)"}`;
+        option.disabled = !log.available;
+        return option;
+    }));
+    const available = data.logs.find((log) => log.available);
+    if (available) {
+        select.value = available.id;
+        await loadLog();
+    } else {
+        select.insertAdjacentHTML("afterbegin", '<option value="">Nenhum log disponível</option>');
+        select.value = "";
+    }
+};
+
 const refresh = async () => {
     const errorBox = byId("connection-error");
     try {
@@ -106,6 +149,9 @@ document.querySelectorAll(".nav-link").forEach((link) => link.addEventListener("
     document.querySelectorAll(".nav-link").forEach((item) => item.classList.remove("active"));
     link.classList.add("active");
 }));
+byId("log-select").addEventListener("change", loadLog);
+byId("refresh-log").addEventListener("click", loadLog);
 
 refresh();
+loadLogCatalog().catch((error) => { byId("log-output").textContent = `Falha ao listar logs: ${error.message}`; });
 setInterval(refresh, 10000);

@@ -13,7 +13,7 @@ SERVER_HOME="$(get_server_home)"
 LOG_DIRECTORY="$SERVER_HOME/logs/system"
 mkdir -p "$LOG_DIRECTORY"
 
-LOG_FILE="$LOG_DIRECTORY/fizlab-update-$(date +%Y-%m-%d_%H-%M-%S).log"
+LOG_FILE="$LOG_DIRECTORY/update.log"
 
 exec > >(tee -a "$LOG_FILE") 2>&1
 

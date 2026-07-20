@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.4.0-alpha.1 — Sprint 4
+
+### Adicionado
+
+- Watchdog portátil com lock, cooldown e recuperação de API/Nginx.
+- Manutenção segura com simulação, rotação e retenção de logs.
+- Agendamentos idempotentes no cron.
+- Histórico operacional no SQLite.
+- Catálogo e leitura limitada de logs pela API.
+- Painel de monitoramento e visualização de logs no dashboard.
+- Testes de segurança de caminhos, retenção e concorrência.
+
+### Segurança
+
+- A API aceita somente identificadores de logs cadastrados.
+- Limites de linhas e bytes impedem respostas excessivas.
+- Configurações, bancos, backups e arquivos do usuário não entram na limpeza.
+
+### Homologação
+
+- Galaxy A15 / Termux: aprovada em 20/07/2026.
+- Doctor: 29 aprovações, 0 avisos e 0 falhas.
+- Recuperação automática de API e Nginx, cron, manutenção, logs, dashboard e boot real aprovados.
+
 ## 0.3.0-alpha.1 — Sprint 3
 
 ### Adicionado

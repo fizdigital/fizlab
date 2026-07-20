@@ -20,7 +20,7 @@ SERVER_HOME="$(get_server_home)"
 LOG_DIRECTORY="$SERVER_HOME/logs/system"
 mkdir -p "$LOG_DIRECTORY"
 
-LOG_FILE="$LOG_DIRECTORY/fizlab-install-$(date +%Y-%m-%d_%H-%M-%S).log"
+LOG_FILE="$LOG_DIRECTORY/install.log"
 
 exec > >(tee -a "$LOG_FILE") 2>&1
 
@@ -86,6 +86,7 @@ create_server_structure() {
     create_directory "$SERVER_HOME/logs/python" 755
     create_directory "$SERVER_HOME/logs/mariadb" 755
     create_directory "$SERVER_HOME/logs/cron" 755
+    create_directory "$SERVER_HOME/tmp" 700
 
     create_directory "$SERVER_HOME/files" 755
     create_directory "$SERVER_HOME/files/documents" 755
@@ -167,6 +168,8 @@ install_command_links() {
     ln -sfn "$PROJECT_DIR/scripts/doctor.sh" "$bin_directory/fizlab-doctor"
     ln -sfn "$PROJECT_DIR/scripts/startup.sh" "$bin_directory/fizlab-start"
     ln -sfn "$PROJECT_DIR/scripts/services.sh" "$bin_directory/fizlab-services"
+    ln -sfn "$PROJECT_DIR/scripts/watchdog.sh" "$bin_directory/fizlab-watchdog"
+    ln -sfn "$PROJECT_DIR/scripts/maintenance.sh" "$bin_directory/fizlab-maintenance"
 
 
     if ! grep -Fq 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc" 2>/dev/null; then
@@ -186,6 +189,7 @@ main() {
     configure_core_services
     create_default_page
     install_command_links
+    bash "$PROJECT_DIR/scripts/install-monitoring-cron.sh"
 
     log_success "Instalação inicial concluída."
     log_info "Recarregue o shell com: source ~/.bashrc"

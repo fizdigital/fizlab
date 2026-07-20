@@ -28,7 +28,7 @@ fi
 
 mkdir -p "$LOG_DIRECTORY" "$LOCK_DIRECTORY"
 
-LOG_FILE="$LOG_DIRECTORY/startup-$(date +%Y-%m-%d_%H-%M-%S).log"
+LOG_FILE="$LOG_DIRECTORY/startup.log"
 exec >> "$LOG_FILE" 2>&1
 
 printf '\n'

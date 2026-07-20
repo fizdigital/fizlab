@@ -39,6 +39,10 @@
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z"/><path d="m9 12 2 2 4-5"/></svg>
                     Diagnóstico
                 </a>
+                <a class="nav-link" href="#logs">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg>
+                    Logs
+                </a>
             </nav>
 
             <div class="sidebar-node">
@@ -118,6 +122,30 @@
                     <div class="doctor-footer"><span>Verificação automática</span><strong id="doctor-status">—</strong></div>
                 </section>
             </div>
+
+            <section id="monitoring" class="panel">
+                <div class="section-heading">
+                    <div><p class="eyebrow">Operação automática</p><h2>Monitoramento e manutenção</h2></div>
+                    <span id="logs-total" class="section-tag">Calculando logs…</span>
+                </div>
+                <div class="operation-grid">
+                    <article><small>Último watchdog</small><strong id="last-watchdog">Ainda não executado</strong></article>
+                    <article><small>Última manutenção</small><strong id="last-maintenance">Ainda não executada</strong></article>
+                </div>
+            </section>
+
+            <section id="logs" class="panel logs-panel">
+                <div class="section-heading">
+                    <div><p class="eyebrow">Diagnóstico operacional</p><h2>Visualização de logs</h2></div>
+                    <button id="refresh-log" class="secondary-button" type="button">Atualizar</button>
+                </div>
+                <div class="log-toolbar">
+                    <label for="log-select">Arquivo</label>
+                    <select id="log-select"><option value="">Carregando logs…</option></select>
+                    <span id="log-meta">—</span>
+                </div>
+                <pre id="log-output" class="log-output" tabindex="0">Selecione um log para visualizar.</pre>
+            </section>
 
             <footer><span>FizLab Infrastructure Automation Toolkit</span><span>Fiz Digital © 2026</span></footer>
             <div id="connection-error" class="connection-error" hidden></div>

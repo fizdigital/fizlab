@@ -6,9 +6,11 @@ SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
 PROJECT_DIR="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)"
 
 source "$PROJECT_DIR/lib/common.sh"
+source "$PROJECT_DIR/lib/config.sh"
 
 PLATFORM="$(detect_platform)"
 SERVER_HOME="$(get_server_home)"
+load_fizlab_config
 
 if [ "${1:-}" = "--json" ]; then
     export SERVER_HOME FIZLAB_VERSION
@@ -122,6 +124,38 @@ check_monitoring() {
     fi
 }
 
+check_remote_access() {
+    local managed_ssh="$SERVER_HOME/config/sshd_config"
+
+    case "$FIZLAB_DASHBOARD_ACCESS" in
+        lan)
+            log_warning "Dashboard ainda disponível na rede local; habilite tailnet após validar o Tailscale."
+            WARNING_COUNT=$((WARNING_COUNT + 1))
+            ;;
+        tailnet)
+            log_success "Dashboard restrito a localhost e Tailnet."
+            PASS_COUNT=$((PASS_COUNT + 1))
+            ;;
+        *)
+            log_error "Modo de dashboard inválido: $FIZLAB_DASHBOARD_ACCESS"
+            FAIL_COUNT=$((FAIL_COUNT + 1))
+            ;;
+    esac
+
+    if [ "$FIZLAB_SSH_HARDENING" = "enabled" ]; then
+        if [ -s "$managed_ssh" ] && [ -s "$HOME/.ssh/authorized_keys" ]; then
+            log_success "Política SSH por chave e Tailnet configurada."
+            PASS_COUNT=$((PASS_COUNT + 1))
+        else
+            log_error "Política SSH marcada como ativa, mas a configuração ou chave autorizada está ausente."
+            FAIL_COUNT=$((FAIL_COUNT + 1))
+        fi
+    else
+        log_warning "Política SSH por chave ainda não foi aplicada."
+        WARNING_COUNT=$((WARNING_COUNT + 1))
+    fi
+}
+
 get_local_ip() {
     python - <<'PY'
 import socket
@@ -197,6 +231,7 @@ if command_exists python; then
 fi
 
 check_monitoring
+check_remote_access
 
 printf '\n'
 printf '============================================\n'

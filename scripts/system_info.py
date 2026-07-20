@@ -19,6 +19,7 @@ from typing import Any
 SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPT_DIR))
 import operations  # noqa: E402
+import remote_access  # noqa: E402
 
 
 COMMANDS = (
@@ -216,6 +217,7 @@ def collect() -> dict[str, Any]:
         "services": services,
         "doctor": doctor(),
         "monitoring": operations.maintenance_status(),
+        "remote_access": remote_access.status(),
     }
 
 

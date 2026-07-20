@@ -43,6 +43,10 @@
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg>
                     Logs
                 </a>
+                <a class="nav-link" href="#remote-access">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12a4 4 0 0 1 4-4h5a4 4 0 1 1 0 8h-1"/><path d="M16 12a4 4 0 0 1-4 4H7a4 4 0 1 1 0-8h1"/></svg>
+                    Acesso
+                </a>
             </nav>
 
             <div class="sidebar-node">
@@ -132,6 +136,18 @@
                     <article><small>Último watchdog</small><strong id="last-watchdog">Ainda não executado</strong></article>
                     <article><small>Última manutenção</small><strong id="last-maintenance">Ainda não executada</strong></article>
                 </div>
+            </section>
+
+            <section id="remote-access" class="panel">
+                <div class="section-heading">
+                    <div><p class="eyebrow">Superfície de rede</p><h2>Acesso remoto seguro</h2></div>
+                    <span id="remote-state" class="section-tag">Verificando…</span>
+                </div>
+                <div class="operation-grid">
+                    <article><small>Dashboard</small><strong id="remote-dashboard">—</strong></article>
+                    <article><small>SSH</small><strong id="remote-ssh">—</strong></article>
+                </div>
+                <p id="remote-summary" class="remote-summary">Auditoria de portas ainda não carregada.</p>
             </section>
 
             <section id="logs" class="panel logs-panel">

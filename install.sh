@@ -170,6 +170,7 @@ install_command_links() {
     ln -sfn "$PROJECT_DIR/scripts/services.sh" "$bin_directory/fizlab-services"
     ln -sfn "$PROJECT_DIR/scripts/watchdog.sh" "$bin_directory/fizlab-watchdog"
     ln -sfn "$PROJECT_DIR/scripts/maintenance.sh" "$bin_directory/fizlab-maintenance"
+    ln -sfn "$PROJECT_DIR/scripts/remote-access.sh" "$bin_directory/fizlab-remote"
 
 
     if ! grep -Fq 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc" 2>/dev/null; then

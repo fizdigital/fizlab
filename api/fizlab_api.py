@@ -62,6 +62,7 @@ class FizLabHandler(BaseHTTPRequestHandler):
             "/api/v1/services": payload["services"],
             "/api/v1/doctor": payload["doctor"],
             "/api/v1/monitoring": payload["monitoring"],
+            "/api/v1/remote-access": payload["remote_access"],
             "/api/v1/maintenance": operations.maintenance_status(),
             "/api/v1/logs": {"logs": operations.log_catalog()},
         }

@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.5.0-alpha.1 — Sprint 5
+
+### Adicionado
+
+- Diagnóstico da superfície de rede com identificação de portas e serviços conhecidos.
+- Comando `fizlab-remote` para status, auditoria e preparação da política SSH.
+- Modo de dashboard `tailnet`, que permite apenas localhost e os intervalos privados do Tailscale.
+- Política SSH validada antes de aplicar: chave obrigatória, senha desativada e acesso limitado à Tailnet.
+- Endpoint `/api/v1/remote-access` e resumo de acesso remoto no dashboard.
+- Testes de auditoria de portas, API e regras Nginx.
+
+### Segurança
+
+- Nenhuma restrição é ativada automaticamente durante a atualização.
+- O SSH só entra em modo endurecido após `fizlab-remote secure-ssh --apply` validar uma chave autorizada.
+- A API continua vinculada a `127.0.0.1` e não é exposta pela Tailnet.
+
+### Homologação
+
+- Galaxy A15 / Termux: aprovada em 20/07/2026.
+- Doctor: 31 aprovações, 0 avisos e 0 falhas.
+- Tailscale reconectou automaticamente após reinicialização do Android.
+- SSH por chave e dashboard validados pela Tailnet e por hotspot móvel.
+- Login SSH por senha e dashboard pela LAN foram bloqueados conforme esperado.
+
 ## 0.4.0-alpha.1 — Sprint 4
 
 ### Adicionado

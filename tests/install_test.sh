@@ -52,6 +52,7 @@ test -f "$SERVER_HOME/databases/sqlite/fizlab.db"
 test -L "$TEST_HOME/.local/bin/fizlab-services"
 test -L "$TEST_HOME/.local/bin/fizlab-watchdog"
 test -L "$TEST_HOME/.local/bin/fizlab-maintenance"
+test -L "$TEST_HOME/.local/bin/fizlab-remote"
 grep -Fq '# FizLab managed monitoring' "$TEST_DIRECTORY/crontab"
 HOME="$TEST_HOME" SERVER_HOME="$SERVER_HOME" \
     "$TEST_HOME/.local/bin/fizlab-services" status >/dev/null

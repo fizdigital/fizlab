@@ -116,6 +116,38 @@ fizlab-maintenance --dry-run
 fizlab-maintenance
 ```
 
+## Acesso remoto seguro
+
+A Sprint 5 usa o aplicativo oficial do **Tailscale no Android** como rede privada
+para administração do A15. Não abra portas no roteador: SSH e dashboard devem ser
+acessados somente por dispositivos autorizados na mesma Tailnet.
+
+Depois de instalar e validar o Tailscale em um segundo dispositivo, consulte o
+diagnóstico:
+
+```bash
+fizlab-remote status
+fizlab-remote audit
+```
+
+O dashboard continua em modo compatível com a rede local até a homologação. Para
+limitá-lo à Tailnet, ajuste `~/server/config/fizlab.env` e recarregue o Nginx:
+
+```bash
+FIZLAB_DASHBOARD_ACCESS=tailnet
+bash services/nginx/configure.sh
+```
+
+Somente depois de testar uma sessão SSH por chave através do Tailscale, aplique a
+política SSH:
+
+```bash
+fizlab-remote secure-ssh --apply
+```
+
+O procedimento completo e a recuperação estão em
+[docs/SPRINT-5-VALIDATION.md](docs/SPRINT-5-VALIDATION.md).
+
 ---
 
 # Licença

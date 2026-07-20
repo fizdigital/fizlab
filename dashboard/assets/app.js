@@ -66,6 +66,12 @@ const render = (data) => {
     byId("last-watchdog").textContent = formatDate(data.monitoring?.last_watchdog);
     byId("last-maintenance").textContent = formatDate(data.monitoring?.last_maintenance);
     byId("logs-total").textContent = `${formatBytes(data.monitoring?.logs_size_bytes || 0)} em logs ativos`;
+    const remote = data.remote_access || {};
+    const remoteWarnings = remote.audit?.warnings || [];
+    byId("remote-dashboard").textContent = remote.dashboard_access === "tailnet" ? "Somente Tailnet" : "Rede local";
+    byId("remote-ssh").textContent = remote.ssh_hardening === "enabled" ? "Chave + Tailnet" : "Aguardando política";
+    byId("remote-state").textContent = remoteWarnings.length ? `${remoteWarnings.length} alerta(s)` : "Auditado";
+    byId("remote-summary").textContent = remoteWarnings.length ? remoteWarnings.join(" ") : "Nenhuma porta de rede inesperada foi identificada pela auditoria do FizLab.";
 
     const services = byId("services-list");
     services.replaceChildren(...Object.entries(data.services).map(([name, service]) => createServiceCard(name, service)));

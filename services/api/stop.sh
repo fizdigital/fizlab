@@ -21,8 +21,9 @@ fi
 
 if kill -0 "$PID" 2>/dev/null; then
     if [ -r "/proc/$PID/cmdline" ] && ! tr '\0' ' ' < "/proc/$PID/cmdline" | grep -Fq "fizlab_api.py"; then
-        log_error "O PID $PID não pertence à FizLab API."
-        exit 1
+        log_warning "PID obsoleto não pertence à FizLab API; removendo apenas o arquivo PID."
+        rm -f "$PID_FILE"
+        exit 0
     fi
     kill "$PID"
 fi

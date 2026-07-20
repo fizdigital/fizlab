@@ -96,16 +96,22 @@ Status: 🚧 Em desenvolvimento
 
 Objetivo: acessar o servidor de qualquer lugar.
 
-## Planejado
+## Implementado (aguardando homologação no Galaxy A15)
 
-- Tailscale
-- WireGuard
-- DDNS
-- HTTPS
-- Cloudflare Tunnel (opcional)
-- Firewall
+- Auditoria de portas e superfície de rede ✅
+- Dashboard privado por Tailnet ✅
+- Política SSH por chave e Tailnet, com ativação explícita ✅
+- Diagnóstico de acesso remoto no Doctor e Dashboard ✅
 
-Status: 📋 Planejado
+## Pendente
+
+- Homologação do Tailscale no Galaxy A15
+- WireGuard manual
+- DDNS e HTTPS público
+- Cloudflare Tunnel (opcional, futura publicação de sites)
+- Firewall para perfis Linux com suporte nativo
+
+Status: 🚧 Em desenvolvimento
 
 ---
 

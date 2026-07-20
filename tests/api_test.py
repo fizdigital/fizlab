@@ -48,6 +48,10 @@ with tempfile.TemporaryDirectory() as temporary_directory:
             status = json.load(response)
         assert "system" in status and "services" in status and "doctor" in status
         assert "monitoring" in status
+        assert "remote_access" in status
+        with urllib.request.urlopen(f"http://127.0.0.1:{PORT}/api/v1/remote-access") as response:
+            remote_access = json.load(response)
+        assert remote_access["dashboard_access"] in ("lan", "tailnet")
         with urllib.request.urlopen(f"http://127.0.0.1:{PORT}/api/v1/logs") as response:
             logs = json.load(response)
         assert any(item["id"] == "watchdog" for item in logs["logs"])

@@ -16,8 +16,11 @@ mkdir -p "$SERVER_HOME/run" "$SERVER_HOME/logs/python"
 if [ -f "$PID_FILE" ]; then
     PID="$(cat "$PID_FILE")"
     if [[ "$PID" =~ ^[0-9]+$ ]] && kill -0 "$PID" 2>/dev/null; then
-        log_success "FizLab API já está em execução (PID $PID)."
-        exit 0
+        if [ -r "/proc/$PID/cmdline" ] && tr '\0' ' ' < "/proc/$PID/cmdline" | grep -Fq "fizlab_api.py"; then
+            log_success "FizLab API já está em execução (PID $PID)."
+            exit 0
+        fi
+        log_warning "PID obsoleto encontrado para a FizLab API; será substituído."
     fi
     rm -f "$PID_FILE"
 fi
@@ -27,7 +30,8 @@ if ! command_exists python; then
     exit 1
 fi
 
-export SERVER_HOME FIZLAB_API_HOST FIZLAB_API_PORT FIZLAB_VERSION
+export SERVER_HOME FIZLAB_API_HOST FIZLAB_API_PORT FIZLAB_VERSION \
+    FIZLAB_DASHBOARD_ACCESS FIZLAB_SSH_HARDENING FIZLAB_SSH_ACCESS
 nohup python -u "$PROJECT_DIR/api/fizlab_api.py" >> "$LOG_FILE" 2>&1 &
 PID=$!
 printf '%s\n' "$PID" > "$PID_FILE"

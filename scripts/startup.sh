@@ -115,7 +115,7 @@ else
 fi
 
 if command_exists sshd; then
-    if ! start_process sshd yes sshd; then
+    if ! start_process sshd yes bash "$PROJECT_DIR/scripts/remote-access.sh" start-sshd; then
         STARTUP_FAILED=1
     fi
 else

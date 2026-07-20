@@ -11,10 +11,12 @@ bash tests/nginx_config_test.sh
 bash tests/dashboard_assets_test.sh
 bash tests/api_service_test.sh
 bash tests/install_test.sh
+bash tests/remote_access_script_test.sh
 python tests/system_info_test.py
 python tests/api_test.py
 python tests/sqlite_test.py
 python tests/operations_test.py
 python tests/watchdog_test.py
+python tests/remote_access_test.py
 
 printf 'Todos os testes do FizLab foram aprovados.\n'

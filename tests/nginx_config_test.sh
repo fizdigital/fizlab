@@ -38,4 +38,18 @@ grep -Fq "text/css css;" "$CONFIG"
 grep -Fq "application/javascript js;" "$CONFIG"
 grep -Fq -- "-s reload" "$TEST_DIRECTORY/nginx-calls.log"
 
+env \
+    PATH="$MOCK_BIN:$PATH" \
+    SERVER_HOME="$TEST_DIRECTORY/tailnet-server" \
+    NGINX_CALLS="$TEST_DIRECTORY/nginx-calls.log" \
+    FIZLAB_DASHBOARD_ACCESS=tailnet \
+    FIZLAB_TAILSCALE_CIDRS='100.64.0.0/10,fd7a:115c:a1e0::/48' \
+    bash "$PROJECT_DIR/services/nginx/configure.sh"
+
+TAILNET_CONFIG="$TEST_DIRECTORY/tailnet-server/config/nginx.conf"
+grep -Fq 'allow 127.0.0.1;' "$TAILNET_CONFIG"
+grep -Fq 'allow 100.64.0.0/10;' "$TAILNET_CONFIG"
+grep -Fq 'allow fd7a:115c:a1e0::/48;' "$TAILNET_CONFIG"
+grep -Fq 'deny all;' "$TAILNET_CONFIG"
+
 printf 'nginx_config_test: OK\n'

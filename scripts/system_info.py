@@ -11,9 +11,14 @@ import shutil
 import socket
 import subprocess
 import time
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPT_DIR))
+import operations  # noqa: E402
 
 
 COMMANDS = (
@@ -160,20 +165,33 @@ def doctor() -> dict[str, Any]:
     directories = {str(home / name): (home / name).is_dir() for name in DIRECTORIES}
     failures = [path for path, exists in directories.items() if not exists]
     warnings = [name for name, exists in commands.items() if not exists]
+    watchdog = Path(__file__).resolve().parent / "watchdog.sh"
+    operational = {
+        "logs_writable": os.access(home / "logs", os.W_OK),
+        "watchdog_installed": watchdog.is_file() and os.access(watchdog, os.X_OK),
+        "last_watchdog": operations.maintenance_status()["last_watchdog"],
+    }
+    if not operational["logs_writable"]:
+        failures.append(str(home / "logs") + " (sem escrita)")
+    if not operational["watchdog_installed"]:
+        failures.append(str(watchdog))
+    if not operational["last_watchdog"]:
+        warnings.append("watchdog ainda não executado")
     return {
         "status": "healthy" if not failures else "down",
         "commands": commands,
         "directories": directories,
         "warnings": warnings,
         "failures": failures,
+        "operational": operational,
     }
 
 
 def collect() -> dict[str, Any]:
     home = server_home()
     services = service_status()
-    required = (services["ssh"],)
-    overall = "healthy" if all(item["running"] for item in required) else "degraded"
+    required = (services["ssh"], services["nginx"], services["api"])
+    overall = "healthy" if all(item["running"] for item in required) else "down"
     current_load_average = load_average()
     cpu_count = os.cpu_count() or 0
     load_percent = round(min(current_load_average[0] / cpu_count * 100, 100), 1) if current_load_average and cpu_count else 0.0
@@ -197,6 +215,7 @@ def collect() -> dict[str, Any]:
         },
         "services": services,
         "doctor": doctor(),
+        "monitoring": operations.maintenance_status(),
     }
 
 

@@ -105,7 +105,16 @@ http://IP_DO_SERVIDOR:8080
 ```
 
 A API oferece os endpoints `/api/v1/health`, `/api/v1/system`,
-`/api/v1/services`, `/api/v1/doctor` e `/api/v1/status`.
+`/api/v1/services`, `/api/v1/doctor`, `/api/v1/status`, `/api/v1/monitoring`,
+`/api/v1/logs` e `/api/v1/events`.
+
+Comandos operacionais:
+
+```bash
+fizlab-watchdog
+fizlab-maintenance --dry-run
+fizlab-maintenance
+```
 
 ---
 

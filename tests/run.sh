@@ -14,5 +14,7 @@ bash tests/install_test.sh
 python tests/system_info_test.py
 python tests/api_test.py
 python tests/sqlite_test.py
+python tests/operations_test.py
+python tests/watchdog_test.py
 
 printf 'Todos os testes do FizLab foram aprovados.\n'

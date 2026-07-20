@@ -29,16 +29,16 @@ Status: ✅ Concluído
 
 Objetivo: transformar o Galaxy A15 em um servidor confiável.
 
-## Planejado
+## Implementado
 
 - Corrigir boot automático
 - Inicialização dos serviços
-- Watchdog
+- Watchdog ✅
 - Atualizações automáticas
-- Rotina de limpeza
+- Rotina de limpeza ✅
 - Backups automáticos
-- Logs centralizados
-- Health Check
+- Logs centralizados ✅
+- Health Check ✅
 
 Status: 🚧 Em desenvolvimento
 
@@ -80,10 +80,11 @@ Objetivo: administrar o servidor via navegador.
 - Uso de memória ✅
 - Uso de armazenamento ✅
 - Informações da rede ✅
+- Visualização de logs ✅
+- Monitoramento e manutenção ✅
 
 ## Pendente
 
-- Visualização de logs
 - Atualizações
 - Backups
 

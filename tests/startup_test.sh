@@ -77,8 +77,8 @@ run_startup() {
 
 SUCCESS_HOME="$TEST_DIRECTORY/success"
 run_startup "$SUCCESS_HOME" 4 5
-grep -q "sshd iniciado e confirmado (tentativa 3/5)." "$SUCCESS_HOME"/logs/system/startup-*.log
-grep -q "serviços obrigatórios ativos" "$SUCCESS_HOME"/logs/system/startup-*.log
+grep -q "sshd iniciado e confirmado (tentativa 3/5)." "$SUCCESS_HOME"/logs/system/startup.log
+grep -q "serviços obrigatórios ativos" "$SUCCESS_HOME"/logs/system/startup.log
 
 FAILURE_HOME="$TEST_DIRECTORY/failure"
 if run_startup "$FAILURE_HOME" 99 3; then
@@ -86,7 +86,7 @@ if run_startup "$FAILURE_HOME" 99 3; then
     exit 1
 fi
 
-grep -q "sshd foi iniciado, mas não apareceu após 3 tentativas." "$FAILURE_HOME"/logs/system/startup-*.log
-grep -q "Rotina de inicialização concluída com falhas." "$FAILURE_HOME"/logs/system/startup-*.log
+grep -q "sshd foi iniciado, mas não apareceu após 3 tentativas." "$FAILURE_HOME"/logs/system/startup.log
+grep -q "Rotina de inicialização concluída com falhas." "$FAILURE_HOME"/logs/system/startup.log
 
 printf 'startup_test: OK\n'

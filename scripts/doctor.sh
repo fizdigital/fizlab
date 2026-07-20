@@ -93,6 +93,35 @@ check_managed_process() {
     fi
 }
 
+check_monitoring() {
+    local watchdog="$PROJECT_DIR/scripts/watchdog.sh"
+    local maintenance="$PROJECT_DIR/scripts/maintenance.sh"
+
+    if [ -x "$watchdog" ] && [ -x "$maintenance" ]; then
+        log_success "Rotinas de watchdog e manutenção instaladas."
+        PASS_COUNT=$((PASS_COUNT + 1))
+    else
+        log_error "Rotinas de monitoramento ausentes ou sem permissão de execução."
+        FAIL_COUNT=$((FAIL_COUNT + 1))
+    fi
+
+    if [ -w "$SERVER_HOME/logs" ]; then
+        log_success "Diretório de logs permite gravação."
+        PASS_COUNT=$((PASS_COUNT + 1))
+    else
+        log_error "Diretório de logs não permite gravação."
+        FAIL_COUNT=$((FAIL_COUNT + 1))
+    fi
+
+    if command_exists crontab && crontab -l 2>/dev/null | grep -Fq '# FizLab managed monitoring'; then
+        log_success "Watchdog e manutenção configurados no cron."
+        PASS_COUNT=$((PASS_COUNT + 1))
+    else
+        log_warning "Agendamentos de monitoramento não encontrados no cron."
+        WARNING_COUNT=$((WARNING_COUNT + 1))
+    fi
+}
+
 get_local_ip() {
     python - <<'PY'
 import socket
@@ -166,6 +195,8 @@ fi
 if command_exists python; then
     printf '\nResumo de serviços: %s\n' "$(SERVER_HOME="$SERVER_HOME" FIZLAB_VERSION="$FIZLAB_VERSION" python "$PROJECT_DIR/scripts/system_info.py" --summary)"
 fi
+
+check_monitoring
 
 printf '\n'
 printf '============================================\n'

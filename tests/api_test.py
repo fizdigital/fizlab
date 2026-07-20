@@ -17,6 +17,8 @@ with tempfile.TemporaryDirectory() as temporary_directory:
     server_home = Path(temporary_directory) / "server"
     for directory in ("www", "api", "git", "backups", "scripts", "logs", "files", "databases"):
         (server_home / directory).mkdir(parents=True, exist_ok=True)
+    (server_home / "logs" / "system").mkdir(parents=True, exist_ok=True)
+    (server_home / "logs" / "system" / "watchdog.log").write_text("linha segura\n", encoding="utf-8")
 
     env = {
         **os.environ,
@@ -45,6 +47,18 @@ with tempfile.TemporaryDirectory() as temporary_directory:
         with urllib.request.urlopen(f"http://127.0.0.1:{PORT}/api/v1/status") as response:
             status = json.load(response)
         assert "system" in status and "services" in status and "doctor" in status
+        assert "monitoring" in status
+        with urllib.request.urlopen(f"http://127.0.0.1:{PORT}/api/v1/logs") as response:
+            logs = json.load(response)
+        assert any(item["id"] == "watchdog" for item in logs["logs"])
+        with urllib.request.urlopen(f"http://127.0.0.1:{PORT}/api/v1/logs/watchdog?lines=10") as response:
+            log = json.load(response)
+        assert log["lines"] == ["linha segura"]
+        try:
+            urllib.request.urlopen(f"http://127.0.0.1:{PORT}/api/v1/logs/../config")
+            raise AssertionError("Caminho arbitrário deveria retornar 404")
+        except urllib.error.HTTPError as error:
+            assert error.code == 404
 
         try:
             urllib.request.urlopen(f"http://127.0.0.1:{PORT}/unknown")

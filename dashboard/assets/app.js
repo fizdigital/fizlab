@@ -70,7 +70,7 @@ const render = (data) => {
     const remoteWarnings = remote.audit?.warnings || [];
     byId("remote-dashboard").textContent = remote.dashboard_access === "tailnet" ? "Somente Tailnet" : "Rede local";
     byId("remote-ssh").textContent = remote.ssh_hardening === "enabled" ? "Chave + Tailnet" : "Aguardando política";
-    byId("remote-state").textContent = remoteWarnings.length ? `${remoteWarnings.length} alerta(s)` : "Auditado";
+    byId("remote-state").textContent = remote.audit?.visibility === "limited" ? "Visibilidade limitada" : (remoteWarnings.length ? `${remoteWarnings.length} alerta(s)` : "Auditado");
     byId("remote-summary").textContent = remoteWarnings.length ? remoteWarnings.join(" ") : "Nenhuma porta de rede inesperada foi identificada pela auditoria do FizLab.";
 
     const services = byId("services-list");

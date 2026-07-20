@@ -68,7 +68,13 @@ def audit() -> dict[str, Any]:
             warnings.append("O dashboard aceita conexões de rede; habilite o modo tailnet após a homologação.")
         if item["service"] == "unknown" and item["exposure"] == "network":
             warnings.append(f"Porta desconhecida exposta na rede: {item['address']}:{item['port']}.")
-    return {"listeners": entries, "warnings": sorted(set(warnings))}
+    visibility = "complete" if entries else "limited"
+    if not entries:
+        warnings.append(
+            "Não foi possível enumerar portas em escuta; no Android/Termux sem root "
+            "o acesso a /proc pode ser limitado. Confirme SSH, dashboard e API pelos testes de homologação."
+        )
+    return {"listeners": entries, "warnings": sorted(set(warnings)), "visibility": visibility}
 
 
 def status() -> dict[str, Any]:

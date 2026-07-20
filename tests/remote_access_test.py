@@ -23,9 +23,15 @@ with mock.patch.object(remote_access, "listeners", return_value=[
     {"protocol": "tcp", "address": "0.0.0.0", "port": 31337},
 ]):
     result = remote_access.audit()
+    assert result["visibility"] == "complete"
     assert result["listeners"][0]["service"] == "api"
     assert any("dashboard" in warning.lower() for warning in result["warnings"])
     assert any("31337" in warning for warning in result["warnings"])
     json.dumps(result)
+
+with mock.patch.object(remote_access, "listeners", return_value=[]):
+    result = remote_access.audit()
+    assert result["visibility"] == "limited"
+    assert result["warnings"]
 
 print("remote_access_test: OK")

@@ -39,7 +39,10 @@ fizlab-remote status
 
 Antes da política final, o Doctor deve apenas alertar que o dashboard ainda está
 na LAN e que a política SSH não foi aplicada. Esses avisos são esperados nesta
-fase.
+fase. Em Android sem root, a auditoria pode informar `Visibilidade limitada`:
+isso ocorre quando o sistema não permite ao Termux enumerar as portas em escuta.
+Nesse caso, os testes reais de SSH, dashboard e API abaixo são a validação
+autoritativa da exposição.
 
 ## 2. Testar SSH pela Tailnet
 

@@ -4,6 +4,23 @@ Este roteiro valida a administração privada do FizLab no Samsung Galaxy A15,
 usando o aplicativo oficial do Tailscale para Android e sem abrir portas no
 roteador.
 
+## Resultado da homologação — Galaxy A15
+
+Homologado em 20/07/2026 no Samsung Galaxy A15 com Termux.
+
+- suíte `./tests/run.sh` aprovada;
+- Doctor aprovado com 31 verificações, 0 avisos e 0 falhas;
+- Tailscale configurado como VPN sempre ativa, sem restrições de bateria e com
+  reconexão automática após a reinicialização do Android;
+- SSH validado pela Tailnet na porta `8022` com chave privada protegida por senha;
+- autenticação por senha recusada após a aplicação da política SSH;
+- dashboard validado pela Tailnet em `http://100.118.0.46:8080`;
+- dashboard pela LAN (`192.168.1.20:8080`) bloqueado com `403 Forbidden`;
+- conexão SSH e dashboard testados também por hotspot móvel;
+- API mantida internamente em `127.0.0.1:8765`.
+
+Status: **aprovado**.
+
 ## Escopo
 
 - SSH do Termux pela Tailnet, na porta `8022`;
